@@ -13,9 +13,12 @@ RUN go mod download
 # Copy the rest of the source code into the container
 COPY . .
 
-# Build the Go application
 
+#Running the producer and the consumer
 CMD ["go", "run", "producer.go"]
 
 
 CMD ["go", "run", "consumer.go"]
+
+
+

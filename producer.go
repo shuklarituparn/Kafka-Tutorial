@@ -1,8 +1,10 @@
 package main
 
 import (
+	"bufio"
 	"github.com/IBM/sarama"
 	"log"
+	"os"
 )
 
 func main() {
@@ -18,15 +20,21 @@ func main() {
 		}
 	}(producer)
 
-	message := &sarama.ProducerMessage{Topic: "My-Message",
-		Value: sarama.StringEncoder("Hello from Kafka"),
-	}
+	scanner := bufio.NewScanner(os.Stdin)
+	var text string
 
-	_, _, err = producer.SendMessage(message) //partition offset and error
-	if err != nil {
-		log.Fatalf("Error sending the message %s", err)
+	for scanner.Scan() {
+		text = scanner.Text()
+		message := &sarama.ProducerMessage{Topic: "My-Message",
+			Value: sarama.StringEncoder(text),
+		}
 
+		_, _, err = producer.SendMessage(message) //partition offset and error
+		if err != nil {
+			log.Fatalf("Error sending the message %s", err)
+
+		}
+		log.Println("Message sent successfully! ")
 	}
-	log.Println("Message sent successfully! ")
 
 }
